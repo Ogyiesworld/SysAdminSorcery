@@ -21,10 +21,3 @@ $WindowPosition = "100,100"
 
 # Launch Microsoft Edge in app mode with the specified URL, size, and position
 Start-Process -FilePath $EdgePath -ArgumentList "--app=$TeamsURL --window-size=$WindowSize --window-position=$WindowPosition"
-
-
-C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe --app=https://teams.microsoft.com --window-size=800,600 --window-position=100,100
-
-Target: "C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe" --app=https://teams.microsoft.com --window-size=800,600 --window-position=100,100
-Start in: "C:\Program Files (x86)\Microsoft\Edge\Application"
-icon location: %USERPROFILE%\AppData\Local\Microsoft\Teams\app.ico
