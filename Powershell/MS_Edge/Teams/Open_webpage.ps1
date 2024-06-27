@@ -21,3 +21,4 @@ $WindowPosition = "100,100"
 
 # Launch Microsoft Edge in app mode with the specified URL, size, and position
 Start-Process -FilePath $EdgePath -ArgumentList "--app=$TeamsURL --window-size=$WindowSize --window-position=$WindowPosition"
+

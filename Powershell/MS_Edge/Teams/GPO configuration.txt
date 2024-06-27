@@ -1,4 +1,4 @@
-# GPO Configuration - not fully tested
+# GPO Configuration - Need tested
  
  File system object 
 Shortcut path %DesktopDir%\Microsoft Teams 
