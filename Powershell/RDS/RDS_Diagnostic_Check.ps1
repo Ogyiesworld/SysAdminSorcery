@@ -1,6 +1,6 @@
 <#
 ********************************************************************************
-# SUMMARY:      Diagnostic Script for RDS Temp Profiles
+# SUMMARY:      Diagnostic Script for RDS Profiles
 # AUTHOR:       Joshua Ogden
 # DESCRIPTION:  This script gathers diagnostic information to help determine 
 #               why users are receiving temporary profiles on an RDS server.
@@ -53,8 +53,38 @@ function Get-SystemLogs {
     Select-Object TimeCreated, Id, Message
 }
 
+# Function to check for corrupt profiles
+function Check-CorruptProfiles {
+    Write-Host "Checking for corrupt profiles..."
+    $profileList = Get-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\ProfileList\*" |
+                   Select-Object PSChildName, ProfileImagePath, State
+    foreach ($profile in $profileList) {
+        if ($profile.State -ne 0) {
+            [PSCustomObject]@{
+                ProfileName     = $profile.PSChildName
+                ProfilePath     = $profile.ProfileImagePath
+                ProfileState    = $profile.State
+            }
+        }
+    }
+}
+
+# Function to check Group Policy settings related to user profiles using gpresult
+function Check-GroupPolicy {
+    Write-Host "Generating Group Policy Resultant Set of Policy (RSoP) Report using gpresult..."
+    $gpresultPath = "$env:TEMP\GPReport.html"
+    gpresult /h $gpresultPath /f
+    Start-Process $gpresultPath
+}
+
+# Function to check the status of User Profile Service
+function Check-UserProfileService {
+    Write-Host "Checking User Profile Service status..."
+    Get-Service -Name ProfSvc | Select-Object Status, Name, DisplayName
+}
+
 # Main script execution
-Write-Host "Starting RDS Temp Profile Diagnostics..."
+Write-Host "Starting extended RDS Temp Profile Diagnostics..."
 
 $profileLogs = Get-UserProfileLogs
 $profileRegistry = Get-ProfileListRegistry
@@ -62,6 +92,8 @@ $diskSpace = Get-DiskSpace
 $profilePermissions = Get-UserProfilePermissions
 $rdsSessionInfo = Get-RDSSessionInfo
 $systemLogs = Get-SystemLogs
+$corruptProfiles = Check-CorruptProfiles
+$userProfileService = Check-UserProfileService
 
 # Output the gathered information
 Write-Host "User Profile Service Logs:"
@@ -82,4 +114,13 @@ $rdsSessionInfo
 Write-Host "`nSystem Event Logs:"
 $systemLogs | Format-Table -AutoSize
 
-Write-Host "Diagnostics complete. Please review the gathered information for potential issues."
+Write-Host "`nCorrupt Profiles Information:"
+$corruptProfiles | Format-Table -AutoSize
+
+Write-Host "`nUser Profile Service Status:"
+$userProfileService | Format-Table -AutoSize
+
+Write-Host "Generating Group Policy Resultant Set of Policy (RSoP) Report using gpresult..."
+Check-GroupPolicy
+
+Write-Host "Extended diagnostics complete. Please review the gathered information for potential issues."
