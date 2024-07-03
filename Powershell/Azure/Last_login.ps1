@@ -10,10 +10,6 @@
 # NOTES:        Requires the AzureAD and Microsoft.Graph modules to be installed.
 ********************************************************************************
 #>
-
-# Connect to Microsoft Graph
-Connect-Graph
-
 # connect to Azure AD
 Connect-AzureAD
 
@@ -39,6 +35,5 @@ catch {
 }
 finally {
     # Disconnect from Microsoft Graph and Azure AD
-    Disconnect-Graph
-    Disconnect-AzureAD
+    write-host "close window to disconnect"
 }
