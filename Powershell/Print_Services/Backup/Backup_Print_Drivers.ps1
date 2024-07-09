@@ -10,10 +10,11 @@
 #>
 
 # Function to ensure the backup directory exists
-function confirm-BackupDirectory {
+function Confirm-BackupDirectory {
     param (
         [string]$Path
     )
+    # Check if the backup directory exists, if not, create it
     if (-Not (Test-Path -Path $Path)) {
         New-Item -ItemType Directory -Path $Path | Out-Null
     }
@@ -49,5 +50,5 @@ function Backup-PrintDrivers {
 
 # Main script execution
 $BackupDirectory = Read-Host "Enter the full path to the backup directory"
-Ensure-BackupDirectory -Path $BackupDirectory
+Confirm-BackupDirectory -Path $BackupDirectory
 Backup-PrintDrivers -BackupDirectory $BackupDirectory

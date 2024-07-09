@@ -30,7 +30,7 @@ foreach ($User in $DeprecatedAccounts) {
         $AccountDetails += [pscustomobject]@{
             Username    = $User.SamAccountName
             Name        = $User.Name
-            Email       = $User.EmailAddress
+            Email       = $User.UserPrincipalName
             Enabled     = $User.Enabled
             Description = $User.Description
             LastLogon   = $User.LastLogonDate
