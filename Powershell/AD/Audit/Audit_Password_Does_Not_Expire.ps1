@@ -1,6 +1,6 @@
 <#
 ********************************************************************************
-# SUMMARY:      Audit Active Directory user information to CSV
+# SUMMARY:      Audit Active Directory where passwords do not expire
 # AUTHOR:       Joshua Ogden
 # DESCRIPTION:  This script checks for the presence of the Active Directory module, 
 #               retrieves all user accounts and specified properties, and exports 
