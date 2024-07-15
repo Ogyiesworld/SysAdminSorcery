@@ -10,18 +10,18 @@
 ********************************************************************************
 #>
 
+# Variable Declaration
+$ProgressPreference = 'SilentlyContinue'
+$TotalSteps = 4
+$CurrentStep = 0
+
 # Verify Administrative Privileges
 if (-NOT ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
     Write-Warning "Please rerun this script with administrative privileges."
     exit
 }
 
-# Progress Bar Initialization
-$progressPreference = 'Continue'
-$TotalSteps = 4
-$CurrentStep = 0
-
-# Function: Update Progress Bar
+# Function: Update Progress Bar (hidden in background)
 Function Update-ProgressBar {
     param (
         [Parameter(Mandatory = $true)]
@@ -43,7 +43,7 @@ Function Invoke-Process {
         $ProcessInfo = New-Object System.Diagnostics.ProcessStartInfo
         $ProcessInfo.FileName = $FilePath
         $ProcessInfo.RedirectStandardOutput = $true
-        $ProcessFunctionInfo.UseShellExecute = $false
+        $ProcessInfo.UseShellExecute = $false
         $ProcessInfo.Arguments = $Arguments
         $ProcessInfo.CreateNoWindow = $true
         $Process = New-Object System.Diagnostics.Process
@@ -77,9 +77,9 @@ Invoke-Process -FilePath "DISM" -Arguments "/Online /Cleanup-Image /RestoreHealt
 # System File Integrity Check
 $CurrentStep++
 Update-ProgressBar -Step $CurrentStep -Status "Verifying System Files with SFC (Step 4 of 4)"
-Invoke-Process -FilePath "sfc" -Arguments "/scannow"
+Invoke-Process -FilePath "sfc.exe" -Arguments "/scannow"
 
 Write-Host "System Health Check and Repair processes completed successfully. Review output for any necessary supplemental actions." -ForegroundColor Green
 
 # Reset the progress bar preference
-$progressPreference = 'SilentlyContinue'
+$ProgressPreference = 'SilentlyContinue'
