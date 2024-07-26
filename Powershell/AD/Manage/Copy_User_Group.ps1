@@ -12,6 +12,14 @@
 ********************************************************************************
 #>
 
+# Variable Declaration
+$SourceUser = $null
+$TargetUser = $null
+$SourceGroups = $null
+$TargetGroups = $null
+$Response = $null
+$GroupName = $null
+
 # Initiate the script by prompting for source and target usernames. Think of them as the "copier" and the "paste" in this permission cloning adventure.
 $SourceUser = Read-Host "Enter the username of the source user"
 $TargetUser = Read-Host "Enter the username of the target user"
@@ -39,11 +47,16 @@ try {
     if ($Response -eq 'Y') {
         # Add the target user to any groups the source user is a member of, but the target user is not. Like making two peas in a pod.
         $SourceGroups | ForEach-Object {
-            if ($TargetGroups -notcontains $_) {
-                Add-ADGroupMember -Identity $_ -Members $TargetUser -ErrorAction SilentlyContinue
+            try {
+                if ($TargetGroups -notcontains $_) {
+                    Add-ADGroupMember -Identity $_ -Members $TargetUser -ErrorAction Stop
+                    Write-Host "User $TargetUser successfully added to group $_"
+                }
+            } catch {
+                Write-Host "Failed to add $TargetUser to group $_. Error: $_"
             }
         }
-        Write-Host "`Operation completed successfully. The Force is strong with this one."
+        Write-Host "Operation completed successfully. The Force is strong with this one."
     }
     elseif ($Response -eq 'N') {
         Write-Host "Operation cancelled by user. Better safe than sorry!"
@@ -53,5 +66,5 @@ try {
     }
 } catch {
     # Graceful error handling, because sometimes things don't go as planned.
-    Write-Host "An unexpected disturbance in the Force was encountered: $_"
+    Write-Host "An unexpected disturbance in the Force was encountered: $($_.Exception.Message)"
 }

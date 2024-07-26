@@ -62,7 +62,7 @@ foreach ($File in $Folder.Files) {
         Write-Error "Failed to process file $File. Error: $_"
         continue
     }
-}   
+}
 
 # Export to CSV
 try {
