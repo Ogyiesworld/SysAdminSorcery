@@ -43,7 +43,7 @@ try {
     }
 
     # Ask for confirmation before proceeding. It's like asking "Are you sure?" before pressing the big red button.
-    $Response = Read-Host "Do you want to synchronize the groups from $SourceUser to $TargetUser? (Y/N)"
+    $Response = Read-Host "Do you want to synchronize the groups from $SourceUser to $TargetUser ? (Y/N)"
     if ($Response -eq 'Y') {
         # Add the target user to any groups the source user is a member of, but the target user is not. Like making two peas in a pod.
         $SourceGroups | ForEach-Object {
