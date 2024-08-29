@@ -66,7 +66,7 @@ Function Get-SystemLogs {
     }
 }
 
-Function Check-CorruptProfiles {
+Function Get-CorruptProfiles {
     Write-Verbose "Checking for corrupt profiles..."
     Try {
         $profileList = Get-ProfileListRegistry
@@ -76,7 +76,7 @@ Function Check-CorruptProfiles {
     }
 }
 
-Function Check-GroupPolicy {
+Function Get-GroupPolicy {
     Write-Verbose "Generating Group Policy Resultant Set of Policy (RSoP) Report..."
     Try {
         $gpresultPath = "$env:TEMP\GPReport.html"
@@ -87,7 +87,7 @@ Function Check-GroupPolicy {
     }
 }
 
-Function Check-UserProfileService {
+Function Get-UserProfileService {
     Write-Verbose "Checking User Profile Service status..."
     Try {
         Get-Service -Name ProfSvc | Select-Object Status, Name, DisplayName
@@ -105,7 +105,7 @@ Function Get-NetworkDiagnostics {
     }
 }
 
-Function Check-ServiceDependencies {
+Function Get-ServiceDependencies {
     Write-Verbose "Checking User Profile Service dependencies..."
     Try {
         Get-Service -Name ProfSvc | Select-Object -ExpandProperty ServicesDependedOn | Select-Object Name, Status
@@ -124,10 +124,10 @@ $diskSpace = Get-DiskSpace
 $profilePermissions = Get-UserProfilePermissions
 $rdsSessionInfo = Get-RDSSessionInfo
 $systemLogs = Get-SystemLogs
-$corruptProfiles = Check-CorruptProfiles
-$userProfileService = Check-UserProfileService
+$corruptProfiles = Get-CorruptProfiles
+$userProfileService = Get-UserProfileService
 $networkDiagnostics = Get-NetworkDiagnostics
-$serviceDependencies = Check-ServiceDependencies
+$serviceDependencies = Get-ServiceDependencies
 
 $diagnosticsOutput = @{
     "User Profile Service Logs" = $profileLogs
@@ -148,12 +148,12 @@ if (-not (Test-Path -Path "C:\temp")) {
 }
 
 foreach ($key in $diagnosticsOutput.Keys) {
-    Write-Host "`n$key:"
+    Write-Host "`n$key"
     $diagnosticsOutput[$key] | Export-Csv -Path $outputFilePath -Append -NoTypeInformation
 }
 
 Write-Host "Diagnostics saved to $outputFilePath"
 
-Check-GroupPolicy
+Get-GroupPolicy
 
 Write-Host "RDS Temp Profile Diagnostics Completed."
