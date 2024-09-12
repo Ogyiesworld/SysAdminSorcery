@@ -17,16 +17,16 @@ try {
     Import-Module ExchangeOnlineManagement -ErrorAction Stop
 
     # Connect to Exchange Online
-    Connect-ExchangeOnline -Credential (Get-Credential) -ErrorAction Stop
+    Connect-ExchangeOnline 
 
     # Get users with auto forwarding enabled
-    $AutoForward ForwardingUsers = Get-Mailbox -ResultSize Unlimited | Where-Object {
+    $AutoForwardingUsers = Get-Mailbox -ResultSize Unlimited | Where-Object {
         $_.ForwardingSMTPAddress -ne $null -or $_.DeliverToMailboxAndForward -eq $true
     } | Select-Object DisplayName, UserPrincipalName, ForwardingSMTPAddress, DeliverToMailboxAndForward
 
     # Define the report path with the current date
     $Date = Get-Date -Format 'MMMM-d-yyyy'
-    $ReportPath = "C:\working\AutoForwardingUsersReport_$Date.csv"
+    $ReportPath = "C:\kworking\AutoForwardingUsersReport_$Date.csv"
 
     # Export the results to a CSV file
     $AutoForwardingUsers | Export-Csv -Path $ReportPath -NoTypeInformation

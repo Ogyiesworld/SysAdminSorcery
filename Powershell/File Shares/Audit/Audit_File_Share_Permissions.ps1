@@ -16,7 +16,7 @@
 Import-Module -Name 'SmbShare'
 
 # Define the output CSV file path
-$csvFilePath = "C:\temp\SharedFolderPermissions.csv"
+$csvFilePath = "C:\temp\SharedFolderPermissions_$(Get-Date -Format 'yyyyMMdd').csv"
 
 # Initialize an empty array to store the audit results
 $auditResults = @()
