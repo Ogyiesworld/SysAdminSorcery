@@ -17,10 +17,10 @@ $Domain = "contoso.com"         # Define the domain to filter email addresses
 $InputOUs = @("DC=contoso,DC=com")  # Sample OUs input - Replace this with user input as needed
 $DescriptionsToExclude = @("Special Mailbox", "Temporary Account", "Service Account", "Office mailbox")  # Define descriptions to filter out
 $RegexToExcludeNumerics = '.*\d+.*'   # Regular expression to match any string with digits
-$SamAccountNamesToExclude = @("*HealthMailbox*", "*San*", "*Backup*", "*NAS*", "*Log*", "*IMAP*", "*Scan*", "*Pay*", "*Invoice*", "*Reserv*", "*mail*", "*noreply*", "*Phone*",
-"*Update*", "*Invest*", "*Data*", "*resume*", "*Print*", "*campain*", "*Calendar*", "*communicat*", "*Insurance*", "*mission*", "*Server*", "*Account*", "*alive*",
-"*concern*", "*admin*", "*support*", "*service*", "*info*", "*contact*", "*webmaster*", "*web*", "*help*", "*it*", "*tech*", "*security*", "*abuse*",
- "*postmaster*", "*fso*", "*lit*", "*Birthday*", "*estate*", "*religous*", "*candy*", "*campain*", "*vicariate*")  # SamAccountNames to exclude (supports wildcards)
+$SamAccountNamesToExclude = @("HealthMailbox", "San", "Backup", "NAS", "Log", "IMAP", "Scan", "Pay", "Invoice", "Reserv", "mail", "noreply", "Phone",
+"Update", "Invest", "Data", "resume", "Print", "campain", "Calendar", "communicat", "Insurance", "mission", "Server", "Account", "alive",
+"concern", "admin", "support", "service", "info", "contact", "webmaster", "web", "help", "it", "tech", "security", "abuse",
+ "postmaster", "fso", "lit", "Birthday", "estate", "candy", "campain")  # SamAccountNames to exclude adjust for your needs
 
 # Function to get user input for OUs
 function Get-OUs {
