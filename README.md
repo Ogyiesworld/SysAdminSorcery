@@ -55,6 +55,3 @@ Please ensure your code adheres to our coding standards and includes appropriate
 
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for more details.
 
----
-
-Feel free to edit and customize this README to better fit your project's needs!
