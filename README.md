@@ -6,7 +6,6 @@ Welcome to SysAdminSorcery! This repository is a collection of PowerShell script
 - [Installation](#installation)
 - [Usage](#usage)
 - [Contributing](#contributing)
-- [License](#license)
 
 ## Installation
 
@@ -48,10 +47,3 @@ We welcome contributions to SysAdminSorcery! To contribute, please follow these 
    git push origin feature/your-feature-name
    ```
 5. Open a pull request to the main repository.
-
-Please ensure your code adheres to our coding standards and includes appropriate tests.
-
-## License
-
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for more details.
-
