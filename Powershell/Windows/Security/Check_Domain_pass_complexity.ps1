@@ -19,7 +19,7 @@ try {
     $PasswordComplexity = Get-ADDefaultDomainPasswordPolicy
 
     # Output the password complexity requirements
-    Write-Host "Password Complexity Requirements for $(Get-Date -Format 'MMMM d, yyyy'):"
+    Write-Host "Password Complexity Requirements for $Date:"
     Write-Host "---------------------------------"
     Write-Host "Minimum Password Length: $($PasswordComplexity.MinPasswordLength)"
     Write-Host "Password History Length: $($PasswordComplexity.PasswordHistoryCount)"
@@ -32,16 +32,25 @@ try {
     Write-Host "Lockout Observation Window: $($PasswordComplexity.LockoutObservationWindow)"
     Write-Host "---------------------------------"
     
-    # Test the password against the password complexity requirements
-    $SecureTestPassword = $TestPassword | ConvertTo-SecureString -AsPlainText -Force
+    # Convert the test password to a secure string
+    $SecureTestPassword = ConvertTo-SecureString -String $TestPassword -AsPlainText -Force
 
-    # Simulation of setting the password to test it (without actual account modification)
-    Write-Host "Testing password complexity with password: $TestPassword"
-    $TestResult = Set-ADAccountPassword -Identity (Get-ADUser -Filter {SamAccountName -eq 'Administrator'}).DistinguishedName -NewPassword $SecureTestPassword -PassThru -ErrorAction Stop
-    if ($TestResult) {
-        Write-Host "Password meets the complexity requirements."
+    # Find an user to simulate password complexity check
+    $User = Get-ADUser -Filter {SamAccountName -eq 'Administrator'} -Properties DistinguishedName
+
+    if ($User) {
+        # Simulation of setting the password to test it (without actual account modification)
+        Write-Host "Testing password complexity with password: $TestPassword"
+        try {
+            $TestResult = Set-ADAccountPassword -Identity $User.DistinguishedName -NewPassword $SecureTestPassword -PassThru -ErrorAction Stop
+            Write-Host "Password meets the complexity requirements."
+        } catch {
+            Write-Host "Password does not meet the complexity requirements: " + $_.Exception.Message
+        }
+    } else {
+        Write-Host "Could not find the user 'Administrator' to test the password complexity."
     }
 } catch {
-    Write-Host "There was an error while checking the password complexity requirements:"
+    Write-Host "There was an error while retrieving the password complexity requirements:"
     Write-Host $_.Exception.Message
 }
