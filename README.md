@@ -2,7 +2,7 @@ Here is a sample README for the "Citadel of Innovation" repository:
 
 ---
 
-# Citadel of Innovation
+# SysAdminSorcery
 
 Welcome to the Citadel of Innovation! This repository is a collection of PowerShell scripts designed to improve help desk resolution times and create innovative solutions with automation to reduce workload.
 
