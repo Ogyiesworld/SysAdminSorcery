@@ -103,4 +103,4 @@ Contributions are the lifeblood of SysAdminSorcery! If you have ideas, bug fixes
 
 ## License
 
-This project is licensed under the MIT License. You’re free to use, modify, and distribute the scripts with proper attribution.
+This project is licensed under the GNU General Public License v3.0.
