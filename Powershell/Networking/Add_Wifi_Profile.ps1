@@ -19,7 +19,7 @@ $XMLProfile = @"
         <SSID>
             <name>$SSID</name>
         </SSID>
-        <nonBroadcast>$Hidden</nonBroadcast>
+        <nonBroadcast>$($Hidden.ToString().ToLower())</nonBroadcast>
     </SSIDConfig>
     <connectionType>ESS</connectionType>
     <connectionMode>auto</connectionMode>
@@ -45,10 +45,30 @@ $TempFile = [System.IO.Path]::GetTempFileName()
 $XMLProfile | Out-File -FilePath $TempFile -Encoding ASCII
 
 try {
-    netsh wlan add profile filename="$TempFile"
-    Write-Host "WiFi profile for $SSID has been added successfully."
+    # Remove existing profile if it exists
+    $existingProfile = netsh wlan show profiles name="$SSID" 2>$null
+    if ($LASTEXITCODE -eq 0) {
+        Write-Host "Removing existing profile for $SSID..."
+        netsh wlan delete profile name="$SSID" | Out-Null
+    }
+
+    # Add new profile
+    $result = netsh wlan add profile filename="$TempFile"
+    if ($LASTEXITCODE -eq 0) {
+        Write-Host "WiFi profile for $SSID has been added successfully."
+        # Try to connect to the network
+        netsh wlan connect name="$SSID"
+    } else {
+        Write-Host "Failed to add WiFi profile. Error: $result" -ForegroundColor Red
+    }
 } catch {
-    Write-Host "An error occurred while adding the WiFi profile: $_"
+    Write-Host "An error occurred while adding the WiFi profile: $_" -ForegroundColor Red
 } finally {
-    Remove-Item -Path $TempFile -Force
+    # Clean up
+    if ($BSTR) {
+        [System.Runtime.InteropServices.Marshal]::ZeroFreeBSTR($BSTR)
+    }
+    if (Test-Path $TempFile) {
+        Remove-Item -Path $TempFile -Force
+    }
 }
