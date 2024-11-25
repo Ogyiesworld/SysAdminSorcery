@@ -178,5 +178,3 @@ try {
 catch {
     Write-Error "Failed to retrieve user information: $_"
 }
-
-Read-Host -Prompt "Press any key to end the script"
