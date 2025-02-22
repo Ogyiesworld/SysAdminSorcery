@@ -26,7 +26,7 @@ try {
 
     # Define the report path with the current date
     $Date = Get-Date -Format 'MMMM-d-yyyy'
-    $ReportPath = "C:\kworking\AutoForwardingUsersReport_$Date.csv"
+    $ReportPath = "C:\temp\AutoForwardingUsersReport_$Date.csv"
 
     # Export the results to a CSV file
     $AutoForwardingUsers | Export-Csv -Path $ReportPath -NoTypeInformation
