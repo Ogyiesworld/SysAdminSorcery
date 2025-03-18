@@ -11,7 +11,7 @@
 #>
 
 # Variable Declarations
-$UPDShare = "\\YourServer\YourUPDShare" # Update with the actual UPD share path
+$UPDShare = read-host "\\YourServer\YourUPDShare" # Update with the actual UPD share path
 $ExportFile = "C:\temp\adusersinfo_$(Get-Date -UFormat "%B-%d-%Y").csv" # Export file name with current date
 $UserProfiles = @() # Array to store user profile details
 $FileSystemObject = New-Object -ComObject Scripting.FileSystemObject # Creates FileSystemObject

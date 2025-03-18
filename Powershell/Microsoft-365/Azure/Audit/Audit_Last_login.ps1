@@ -15,7 +15,7 @@
 #>
 
 # Connect to Microsoft Graph with the required scopes
-Connect-MgGraph -Scopes "User.Read.All","AuditLog.Read.All"
+Connect-MgGraph
 
 try {
     # Get all users with the signInActivity property
