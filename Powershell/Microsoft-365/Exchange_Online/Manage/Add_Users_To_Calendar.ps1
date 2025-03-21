@@ -25,20 +25,24 @@ try {
     # Connect to Exchange Online
     Connect-ExchangeOnline
 
+    # What is the domain of the users? This will be used to append to the users email addresses and the calendars getting permission changes
+    $UserDomain = Read-Host "Enter the domain of the users (e.g., 'example.com')"
+   
     # Prompt for the input user
-    $UserEmails = Read-Host "Enter the email addresses of the users to add to the calendar (separated by commas)"
+    $UserEmails = Read-Host "Enter the username of the users to add to the calendar (separated by commas)"
     $UserEmails = $UserEmails -split "," | ForEach-Object { $_.Trim() }
+    $UserEmails = $UserEmails | ForEach-Object { "$_@$UserDomain" }
 
     # Output what each permission level means to make the user aware of the options
-    Write-Host "Permissions levels:" -ForegroundColor Yellow 
-    Write-Host "Owner: Create, read, modify, and delete all items and files, and create subfolders." -ForegroundColor Yellow
-    Write-Host "PublishingEditor: Create, read, modify, and delete all items and files." -ForegroundColor Yellow
-    Write-Host "Editor: Create, read, modify, and delete all items." -ForegroundColor Yellow
-    Write-Host "PublishingAuthor: Create and read items, create subfolders, and modify and delete items and files you create." -ForegroundColor Yellow
-    Write-Host "Author: Create and read items, and modify and delete items you create." -ForegroundColor Yellow
-    Write-Host "NonEditingAuthor: Create and read items, and delete items you create." -ForegroundColor Yellow
-    Write-Host "Reviewer: Read items." -ForegroundColor Yellow
-    Write-Host "Custom: Define custom permissions." -ForegroundColor Yellow
+    Write-Host "Permissions levels:" -ForegroundColor Cyan 
+    Write-Host "Owner: Create, read, modify, and delete all items and files, and create subfolders." -ForegroundColor Green
+    Write-Host "PublishingEditor: Create, read, modify, and delete all items and files." -ForegroundColor Green
+    Write-Host "Editor: Create, read, modify, and delete all items." -ForegroundColor Green
+    Write-Host "PublishingAuthor: Create and read items, create subfolders, and modify and delete items and files you create." -ForegroundColor Green
+    Write-Host "Author: Create and read items, and modify and delete items you create." -ForegroundColor Green
+    Write-Host "NonEditingAuthor: Create and read items, and delete items you create." -ForegroundColor Green
+    Write-Host "Reviewer: Read items." -ForegroundColor Green
+    Write-Host "Custom: Define custom permissions." -ForegroundColor Green
 
     # Ask for calendar permissions
     $PermissionsOptions = @("Owner", "PublishingEditor", "Editor", "PublishingAuthor", "Author", "NonEditingAuthor", "Reviewer", "Custom")
@@ -56,19 +60,29 @@ try {
         $CalendarPermissions = $Permissions
     }
 
-    # Get the calendar owner email
-    $CalendarOwner = Read-Host "Enter the email address of the calendar owner"
+    # Get multiple calendar owners emails that users will be added to
+    $CalendarOwners = Read-Host "Enter the username of the calendar owners (separated by commas)"
+    $CalendarOwnersSplit = $CalendarOwners -split "," | ForEach-Object { $_.Trim() }
+    $CalendarOwnersSplit = $CalendarOwnersSplit | ForEach-Object { "$_@$UserDomain" }
 
     # Apply the calendar permissions to each user
-    foreach ($UserEmail in $UserEmails) {
-        # Applying permissions for the current user
-        Add-MailboxFolderPermission -Identity "${CalendarOwner}:\Calendar" -User $UserEmail -AccessRights $CalendarPermissions
+    foreach ($CalendarOwner in $CalendarOwnersSplit) {
+        foreach ($UserEmail in $UserEmails) {
+            # If permissions already exist, change them
+            if (Get-MailboxFolderPermission -Identity "${CalendarOwner}:\Calendar" -User $UserEmail) {
+                Set-MailboxFolderPermission -Identity "${CalendarOwner}:\Calendar" -User $UserEmail -AccessRights $CalendarPermissions
+            }
+            # Otherwise, add new permissions
+            else {
+                Add-MailboxFolderPermission -Identity "${CalendarOwner}:\Calendar" -User $UserEmail -AccessRights $CalendarPermissions
+            }
+        }
     }
 
-    Write-Host "Permissions applied successfully!"
+    Write-Host "Permissions applied successfully!" -ForegroundColor Green
 }
 catch {
-    Write-Error "An error occurred: $_"
+    Write-Error "An error occurred: $_" -ForegroundColor Red
 }
 finally {
     # Disconnect from Exchange Online
