@@ -12,14 +12,12 @@
 
 # Variable Declaration
 $Date = Get-Date -Format "MMMM-d-yyyy"
-$TestPassword = "TestPassword123!"   # Test password to check against the policy
-
 try {
     # Check the password complexity requirements
     $PasswordComplexity = Get-ADDefaultDomainPasswordPolicy
 
     # Output the password complexity requirements
-    Write-Host "Password Complexity Requirements for $Date:"
+    Write-Host "Password Complexity Requirements for $Date"
     Write-Host "---------------------------------"
     Write-Host "Minimum Password Length: $($PasswordComplexity.MinPasswordLength)"
     Write-Host "Password History Length: $($PasswordComplexity.PasswordHistoryCount)"
@@ -31,6 +29,9 @@ try {
     Write-Host "Lockout Duration: $($PasswordComplexity.LockoutDuration)"
     Write-Host "Lockout Observation Window: $($PasswordComplexity.LockoutObservationWindow)"
     Write-Host "---------------------------------"
+    
+    # Get the test password
+    $TestPassword = Read-Host -Prompt "Enter a password to test"
     
     # Convert the test password to a secure string
     $SecureTestPassword = ConvertTo-SecureString -String $TestPassword -AsPlainText -Force
