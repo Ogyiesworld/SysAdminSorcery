@@ -12,11 +12,6 @@
 ********************************************************************************
 #>
 
-# Variable Declaration
-$Username = $null
-$User = $null
-$OuPath = $null
-
 # Import the Active Directory module (if not already imported)
 Import-Module ActiveDirectory -ErrorAction Stop
 
