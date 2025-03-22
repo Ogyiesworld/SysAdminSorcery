@@ -5,6 +5,9 @@
 # DESCRIPTION:  Outputs to CSV with server and disk details, including largest folders/files.
 # COMPATIBILITY: PowerShell 7.0 and above
 # NOTES:        Ensure permissions for accessing servers and WMI objects. Double-check all inputs.
+#               The script does not run very fast and may take a while to complete. 
+#               If you have ideas for improvement, please submit a pull request.
+#               Otherwise let it run in the background.
 ********************************************************************************
 #>
 
@@ -12,7 +15,6 @@
 $Servers = @()
 $Results = @()
 $Date = Get-Date -Format "MMM-dd-yyyy"
-$FilePath = ""
 
 # Server Information Retrieval
 $Servers = Get-ADComputer -Filter {OperatingSystem -like "*Server*"} | Select-Object -ExpandProperty Name
@@ -29,8 +31,7 @@ foreach ($Server in $Servers) {
 }
 
 # Obtain output file path
-$UserFilePath = Read-Host "Enter the path and filename to save the CSV file (without extension)"
-$FilePath = "${UserFilePath}_$Date.csv"
+$FilePath = "C:\Temp\ServerDiskSpace_$(Get-Date -Format 'MMM-d-yyyy')"
 
 # Initialize Progress Tracking
 $Count = 0
