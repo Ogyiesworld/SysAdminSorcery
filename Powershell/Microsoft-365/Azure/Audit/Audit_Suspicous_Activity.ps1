@@ -6,6 +6,7 @@
 #               and report suspicious activities related to Enterprise Applications.
 # COMPATIBILITY: AzureAD Module, PowerShell 5.1 or later
 # NOTES:        Ensure you have the AzureAD module installed and are logged in to Azure.
+# AzureAD cmdlet has been deprecated in favor of Microsoft Graph. This script should be refactored to use Microsoft.Graph cmdlets
 #********************************************************************************
 #>
 

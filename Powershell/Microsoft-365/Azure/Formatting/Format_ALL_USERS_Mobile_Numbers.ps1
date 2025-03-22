@@ -10,6 +10,7 @@
 # NOTES:        Version 1.1. Last Updated: [04/03/2024]. Ensure the AzureAD or AzureADPreview module 
 #               is installed and that you have the necessary permissions to update user attributes 
 #               in Azure AD.
+# AzureAD cmdlet has been deprecated in favor of Microsoft Graph. This script should be refactored to use Microsoft.Graph cmdlets
 ****************************************************************************************************
 #>
 
