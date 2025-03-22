@@ -45,7 +45,7 @@ function Get-Files {
                 }
             }
         } catch {
-            Write-Warning "Error accessing path $DirectoryPath: $_"
+            Write-Warning "Error accessing path $DirectoryPath $_"
         }
     }
 
@@ -54,7 +54,7 @@ function Get-Files {
             Get-FilesInDirectory -DirectoryPath $_.FullName
         }
     } catch {
-        Write-Warning "Error accessing path $Path: $_"
+        Write-Warning "Error accessing path $Path $_"
     }
 
     return $Files
