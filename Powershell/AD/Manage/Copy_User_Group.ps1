@@ -12,14 +12,6 @@
 ********************************************************************************
 #>
 
-# Variable Declaration
-$SourceUser = $null
-$TargetUser = $null
-$SourceGroups = $null
-$TargetGroups = $null
-$Response = $null
-$GroupName = $null
-
 # Initiate the script by prompting for source and target usernames. Think of them as the "copier" and the "paste" in this permission cloning adventure.
 $SourceUser = Read-Host "Enter the username of the source user"
 $TargetUser = Read-Host "Enter the username of the target user"
@@ -33,13 +25,13 @@ try {
     Write-Host "Group memberships for $SourceUser"
     $SourceGroups | ForEach-Object {
         $GroupName = (Get-ADGroup -Identity $_).Name
-        Write-Host $GroupName
+        Write-Host $GroupName -ForegroundColor Green
     }
 
     Write-Host "Group memberships for $TargetUser"
     $TargetGroups | ForEach-Object {
         $GroupName = (Get-ADGroup -Identity $_).Name
-        Write-Host $GroupName
+        Write-Host $GroupName -ForegroundColor Green
     }
 
     # Ask for confirmation before proceeding. It's like asking "Are you sure?" before pressing the big red button.
@@ -50,21 +42,21 @@ try {
             try {
                 if ($TargetGroups -notcontains $_) {
                     Add-ADGroupMember -Identity $_ -Members $TargetUser -ErrorAction Stop
-                    Write-Host "User $TargetUser successfully added to group $_"
+                    Write-Host "User $TargetUser successfully added to group $_" -ForegroundColor Green
                 }
             } catch {
-                Write-Host "Failed to add $TargetUser to group $_. Error: $_"
+                Write-Host "Failed to add $TargetUser to group $_. Error: $_" -ForegroundColor Red
             }
         }
-        Write-Host "Operation completed successfully. The Force is strong with this one."
+        Write-Host "Operation completed successfully. The Force is strong with this one." -ForegroundColor Green
     }
     elseif ($Response -eq 'N') {
-        Write-Host "Operation cancelled by user. Better safe than sorry!"
+        Write-Host "Operation cancelled by user. Better safe than sorry!" -ForegroundColor Yellow
     }
     else {
-        Write-Host "Invalid response. Operation aborted. Remember, it's Y or N, not rocket science!"
+        Write-Host "Invalid response. Operation aborted. Remember, it's Y or N, not rocket science!" -ForegroundColor Red
     }
 } catch {
     # Graceful error handling, because sometimes things don't go as planned.
-    Write-Host "An unexpected disturbance in the Force was encountered: $($_.Exception.Message)"
+    Write-Host "An unexpected disturbance in the Force was encountered: $($_.Exception.Message)" -ForegroundColor Red
 }
