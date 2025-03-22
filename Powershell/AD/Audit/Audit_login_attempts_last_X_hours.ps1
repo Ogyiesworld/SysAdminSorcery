@@ -1,9 +1,9 @@
 <#
 ********************************************************************************
-# SUMMARY:      Retrieve User Login Attempts for the Last 72 Hours
+# SUMMARY:      Retrieve User Login Attempts for the Last X Hours
 # AUTHOR:       Joshua Ogden
 # DESCRIPTION:  This script retrieves login attempts from the security event log 
-#               for a specified user within the last 72 hours.
+#               for a specified user within the last X hours.
 # COMPATIBILITY: Windows PowerShell 5.1, PowerShell 7
 # NOTES:        Ensure that the script is run with administrative privileges to 
 #               access the security event log.
@@ -13,6 +13,9 @@
 # Username
 $UserName = Read-Host "Enter the username to check login attempts for"
 
+# Hours
+$X = Read-Host "Enter the number of hours to check login attempts for"
+
 # Function to retrieve login attempts
 function Get-UserLoginAttempts {
     param (
@@ -20,7 +23,7 @@ function Get-UserLoginAttempts {
     )
     
     # Calculate the time range
-    $startTime = (Get-Date).AddHours(-72)
+    $startTime = (Get-Date).AddHours(-$X)
     $endTime = Get-Date
 
     # Query the security event log for login attempts (both successful and failed)
@@ -50,10 +53,10 @@ try {
 
     # Display the results
     if ($loginAttempts) {
-        Write-Output "Login attempts for user '$UserName' in the last 72 hours:"
+        Write-Output "Login attempts for user '$UserName' in the last $X hours:"
         $loginAttempts | Format-Table -AutoSize
     } else {
-        Write-Output "No login attempts found for user '$UserName' in the last 72 hours."
+        Write-Output "No login attempts found for user '$UserName' in the last $X hours."
     }
 } catch {
     Write-Error "An error occurred while retrieving login attempts: $_"
