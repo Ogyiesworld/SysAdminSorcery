@@ -5,6 +5,7 @@
 # DESCRIPTION:  This script checks the reboot times of a server for a specified number of months.
 # COMPATIBILITY: Windows Server with PowerShell 5.1 or higher
 # NOTES:        Ensure that the script is run with administrative privileges to access system logs.
+#               Run this script directly on the server you want to check.
 ********************************************************************************
 #>
 
