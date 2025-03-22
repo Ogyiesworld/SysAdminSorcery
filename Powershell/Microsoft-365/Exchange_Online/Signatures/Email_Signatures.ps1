@@ -8,6 +8,7 @@
 # COMPATIBILITY: Exchange Online, Azure AD
 # NOTES:        Ensure you have the necessary permissions to access Azure AD and modify 
 #               user attributes in Exchange Online.
+# AzureAD cmdlet has been deprecated in favor of Microsoft Graph. This script should be refactored to use Microsoft.Graph cmdlets
 ********************************************************************************
 #>
 
