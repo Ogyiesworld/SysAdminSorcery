@@ -10,7 +10,6 @@
 #               and Windows 10. Administrative privileges are required.
 # NOTES:        Version 1.2. Last Updated: [07/04/2024]. Run this script as Administrator 
 #               to ensure it has the necessary permissions to modify network adapter settings.
-********************************************************************************
 #>
 
 # Get all network adapters including VPN adapters, regardless of their 'Up' or 'Down' status
@@ -36,10 +35,10 @@ if ($userChoice -ieq "Y") {
         if ($resetVpnChoice -ieq "Y" -or $adapter.InterfaceDescription -notmatch 'VPN') {
             Write-Host "Configuring adapter to DHCP: $($adapter.Name)" -ForegroundColor Green
             # Set IP address to be obtained automatically
-            Set-NetIPInterface -InterfaceAlias $adapter.Name -Dhcp Enabled
+            Set-NetIPInterface -InterfaceIndex $adapter.ifIndex -Dhcp Enabled
             
             # Clear any static DNS settings, ensuring DNS is obtained automatically
-            Set-DnsClientServerAddress -InterfaceAlias $adapter.Name -ResetServerAddresses
+            Set-DnsClientServerAddress -InterfaceIndex $adapter.ifIndex -ResetServerAddresses
         }
     }
     Write-Host "Network adapters have been configured to use DHCP for IP and DNS settings." -ForegroundColor Green
