@@ -1,5 +1,5 @@
 <#
-********************************************************************************
+########################################################################################
 # SUMMARY:      Confirm and Adjust Network Adapter DHCP Configuration
 # AUTHOR:       Joshua Ogden
 # DESCRIPTION:  This script lists all network adapters, including VPN adapters, 
@@ -10,6 +10,7 @@
 #               and Windows 10. Administrative privileges are required.
 # NOTES:        Version 1.2. Last Updated: [07/04/2024]. Run this script as Administrator 
 #               to ensure it has the necessary permissions to modify network adapter settings.
+########################################################################################
 #>
 
 # Get all network adapters including VPN adapters, regardless of their 'Up' or 'Down' status
@@ -24,6 +25,20 @@ Write-Host "The following network adapters will be considered for configuration 
 
 foreach ($adapter in $adapters) {
     Write-Host "Adapter: $($adapter.Name) - Status: $($adapter.Status)" -ForegroundColor Yellow
+}
+
+#check the vpn adapters profile configuration for profilenameserver being defined as it becomes dns while showing dns in auto
+Get-NetAdapter | Where-Object {$adapters.ifIndex -eq $_.ifIndex} | ForEach-Object {
+    $guid = (Get-NetAdapter -InterfaceIndex $_.ifIndex).InterfaceGuid
+    $path = "HKLM:\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters\Interfaces\$guid"
+    
+    # Check if ProfileNameServer exists before removing
+    if (Get-ItemProperty -Path $path -Name "ProfileNameServer" -ErrorAction SilentlyContinue) {
+        Remove-ItemProperty -Path $path -Name "ProfileNameServer" -Force
+        Write-Host "ProfileNameServer deleted for adapter index $($_.ifIndex)"
+    } else {
+        Write-Host "ProfileNameServer not found for adapter index $($_.ifIndex)"
+    }
 }
 
 # Ask for user confirmation
